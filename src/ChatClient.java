@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -9,6 +10,7 @@ public class ChatClient {
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Consumer<String> onMessageReceived;
+    private File file;
 
 
 /*     public ChatClient( String address, int port) {
@@ -42,9 +44,30 @@ public class ChatClient {
         this.onMessageReceived = onMessageReceived;
     }
 
-        public void sendMessage(String msg){
-            out.println(msg);
+    public void sendMessage(String msg) {
+        out.println(msg);
+    }
+
+    public void sendFile(File f){
+        try {
+            FileInputStream fileInputStream = new FileInputStream(f.getAbsolutePath());
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
+            String fileName = f.getName();
+            byte[] fileNameBytes = fileName.getBytes();
+
+            byte[] fileContentsBytes = new byte[(int) f.length()];
+            fileInputStream.read(fileContentsBytes);
+
+            dataOutputStream.writeInt(fileNameBytes.length);
+            dataOutputStream.write(fileNameBytes);
+
+            dataOutputStream.writeInt(fileContentsBytes.length);
+            dataOutputStream.write(fileContentsBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
     public void startClient(){
         new Thread(() -> {
@@ -55,7 +78,7 @@ public class ChatClient {
                 }
             }catch (IOException e) {
                     e.printStackTrace();
-                }
+            }
         }).start();
     }
 }
