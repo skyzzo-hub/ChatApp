@@ -82,6 +82,7 @@ class ClientHandler implements Runnable{
                 int fileId = 0;
 
                 DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+
                 int fileNameLength = dataInputStream.readInt();
                 if (fileNameLength > 0){
                     byte[] fileNameBytes = new byte[fileNameLength];
