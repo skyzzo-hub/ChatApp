@@ -74,55 +74,59 @@ class ClientHandler implements Runnable{
 
             String inputLine; 
             while((inputLine = in.readLine()) != null){
-                //Broadcast message to all clients
-                for ( ClientHandler aClient : clients) {
-                    aClient.out.println(inputLine);
-                }
+                if (inputLine.startsWith("FILE:")){
+                    int fileId = 0;
 
-                int fileId = 0;
+                    DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
 
-                DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+                    int fileNameLength = dataInputStream.readInt();
+                    if (fileNameLength > 0){
+                        byte[] fileNameBytes = new byte[fileNameLength];
+                        dataInputStream.readFully(fileNameBytes,0,fileNameLength);
+                        String fileName = new String(fileNameBytes);
 
-                int fileNameLength = dataInputStream.readInt();
-                if (fileNameLength > 0){
-                    byte[] fileNameBytes = new byte[fileNameLength];
-                    dataInputStream.readFully(fileNameBytes,0,fileNameLength);
-                    String fileName = new String(fileNameBytes);
-
-                    int fileContentLength = dataInputStream.readInt();
-                    if (fileContentLength > 0){
-                        byte[] fileContentBytes = new byte[fileContentLength];
-                        dataInputStream.readFully(fileContentBytes,0,fileContentLength);
+                        int fileContentLength = dataInputStream.readInt();
+                        if (fileContentLength > 0){
+                            byte[] fileContentBytes = new byte[fileContentLength];
+                            dataInputStream.readFully(fileContentBytes,0,fileContentLength);
 
 
-                        JPanel jpFileRow = new JPanel();
-                        jpFileRow.setLayout(new BoxLayout(jpFileRow,BoxLayout.Y_AXIS));
+                            JPanel jpFileRow = new JPanel();
+                            jpFileRow.setLayout(new BoxLayout(jpFileRow,BoxLayout.Y_AXIS));
 
-                        JLabel jlFileName = new JLabel(fileName);
-                        jlFileName.setFont(new Font("Arial", Font.BOLD ,20 ));
-                        jlFileName.setBorder(new EmptyBorder(10,0,10,0));
+                            JLabel jlFileName = new JLabel(fileName);
+                            jlFileName.setFont(new Font("Arial", Font.BOLD ,20 ));
+                            jlFileName.setBorder(new EmptyBorder(10,0,10,0));
 
-                        if(getFileExtention(fileName).equalsIgnoreCase("txt")){
+                            if(getFileExtention(fileName).equalsIgnoreCase("txt")){
 
-                            jpFileRow.setName(String.valueOf(fileId));
-                            jpFileRow.addMouseListener(getMyMouseListener());
-                            jpFileRow.add(jlFileName);
+                                jpFileRow.setName(String.valueOf(fileId));
+                                jpFileRow.addMouseListener(getMyMouseListener());
+                                jpFileRow.add(jlFileName);
 
-                            jPanel.add(jpFileRow);
-                            jFrame.validate();
+                                jPanel.add(jpFileRow);
+                                jFrame.validate();
 
-                        }else{
-                            jpFileRow.setName(String.valueOf(fileId));
-                            jpFileRow.addMouseListener(getMyMouseListener());
-                            jpFileRow.add(jlFileName);
-                            jPanel.add(jpFileRow);
-                            jFrame.validate();
+                            }else{
+                                jpFileRow.setName(String.valueOf(fileId));
+                                jpFileRow.addMouseListener(getMyMouseListener());
+                                jpFileRow.add(jlFileName);
+                                jPanel.add(jpFileRow);
+                                jFrame.validate();
 
+                            }
+                            myFiles.add(new MyFile(fileId,fileName,fileContentBytes,getFileExtention(fileName)));
                         }
-                        myFiles.add(new MyFile(fileId,fileName,fileContentBytes,getFileExtention(fileName)));
+
                     }
 
+                }else{
+                    //Broadcast message to all clients
+                    for ( ClientHandler aClient : clients) {
+                        aClient.out.println(inputLine);
+                    }
                 }
+
             }
 
         } catch (IOException e) {

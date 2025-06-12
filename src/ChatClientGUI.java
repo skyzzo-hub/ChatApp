@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -79,8 +78,8 @@ public class ChatClientGUI extends JFrame {
                 if (file[0] != null) {
                     sendFButton.setEnabled(true);
                     confirmSendFileButton.setEnabled(false);
-                    String message = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": " + "New file added to the Server !" + file[0].getName();
-                    client.sendMessage(message);
+                    String fileMessage = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": " + "New file added to the Server !";
+                    client.sendMessage(fileMessage);
                     client.sendFile(file[0]);
                     textField.setText("");
                 }
@@ -133,7 +132,7 @@ public class ChatClientGUI extends JFrame {
         
 
     private void onMessageReceived(String message){
-        SwingUtilities.invokeLater(() -> messageArea.append(message + "\n"));gg
+        SwingUtilities.invokeLater(() -> messageArea.append(message + "\n"));
     }
 
     public static void main(String[] args) {

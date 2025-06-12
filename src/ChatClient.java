@@ -6,36 +6,10 @@ import java.util.function.Consumer;
 
 public class ChatClient {
     private Socket socket = null;
-    private BufferedReader inputConsole = null;
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Consumer<String> onMessageReceived;
-    private File file;
 
-
-/*     public ChatClient( String address, int port) {
-        try{
-            socket = new Socket(address, port);
-            System.out.println("Connected to the chat server");
-
-            inputConsole = new BufferedReader(new InputStreamReader(System.in));
-            out = new PrintWriter(socket.getOutputStream(),true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line = "";
-            while(!line.equals("exit")) {
-                line = inputConsole.readLine();
-                out.println(line);
-                System.out.println(in.readLine());
-            }
-            socket.close();
-            inputConsole.close();
-            out.close();            
-        } catch(UnknownHostException u) {
-            System.out.println("Host unknown: " +u.getMessage());
-        } catch (IOException i){
-            System.out.println("Expected exception: " + i.getMessage());
-        }
-    } */
 
     public ChatClient(String serverAddress, int serverPort, Consumer<String> onMessageReceived) throws IOException {
         this.socket = new Socket(serverAddress, serverPort);
@@ -58,6 +32,8 @@ public class ChatClient {
 
             byte[] fileContentsBytes = new byte[(int) f.length()];
             fileInputStream.read(fileContentsBytes);
+
+            this.out.println("FILE: " + fileName);
 
             dataOutputStream.writeInt(fileNameBytes.length);
             dataOutputStream.write(fileNameBytes);
