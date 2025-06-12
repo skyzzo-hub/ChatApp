@@ -133,7 +133,7 @@ public class ChatClientGUI extends JFrame {
         
 
     private void onMessageReceived(String message){
-        SwingUtilities.invokeLater(() -> messageArea.append(message + "\n"));
+        SwingUtilities.invokeLater(() -> messageArea.append(message + "\n"));gg
     }
 
     public static void main(String[] args) {
