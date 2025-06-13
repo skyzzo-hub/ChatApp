@@ -51,7 +51,6 @@ public class ChatClientGUI extends JFrame {
                 String message = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": " + textField.getText();
                 client.sendMessage(message);
                 textField.setText("");
-
             }
         });
         confirmSendFileButton = new JButton(iconOutputFile);

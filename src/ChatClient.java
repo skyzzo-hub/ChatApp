@@ -24,16 +24,20 @@ public class ChatClient {
 
     public void sendFile(File f){
         try {
+
+
             FileInputStream fileInputStream = new FileInputStream(f.getAbsolutePath());
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
             String fileName = f.getName();
             byte[] fileNameBytes = fileName.getBytes();
 
+            this.out.println("FILE: " + fileName);
+            this.out.flush();
             byte[] fileContentsBytes = new byte[(int) f.length()];
             fileInputStream.read(fileContentsBytes);
 
-            this.out.println("FILE: " + fileName);
+
 
             dataOutputStream.writeInt(fileNameBytes.length);
             dataOutputStream.write(fileNameBytes);
